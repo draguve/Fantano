@@ -1,3 +1,8 @@
+from tinydb import TinyDB, Query
+
+db = TinyDB('fantano.json')
+table = db.table('vidids')
+
 FANTANO_UPLOADS="UUt7fwAhXDy3oNFTAzF2o8Pwx"
 
 # -*- coding: utf-8 -*-
@@ -30,14 +35,28 @@ def main():
     youtube = googleapiclient.discovery.build(
         api_service_name, api_version, credentials=credentials)
 
+    gotIds = 0
     request = youtube.playlistItems().list(
         part="contentDetails",
         maxResults=50,
         playlistId="UUt7fwAhXDy3oNFTAzF2o8Pw"
     )
-    response = request.execute()
 
-    print(response)
+    while request:
+        response = request.execute()
+        got_response(response)
+        gotIds = gotIds + len(response["items"])
+        print(gotIds)
+
+        request = youtube.playlistItems().list_next(
+            request, response)
+
+
+def got_response(response):
+    for item in response["items"]:
+        table.insert(item["contentDetails"])
+
+
 
 if __name__ == "__main__":
     main()
