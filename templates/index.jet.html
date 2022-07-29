@@ -1,0 +1,103 @@
+{{extends "./default.jet.html"}}
+{{block body()}}
+<div class="container">
+    <div class="section">
+        <div class="row" style="margin-top: 2em;">
+            <div class="col s12 m2"></div>
+            <div class="col s12 m8">
+                <div class="row">
+                    <div class="col s12" method='post'>
+                        <center style="padding-bottom: 2em;">
+                            <h5 class="indigo-text">Ratings</h5>
+                            <h6>Last updated on 29/7/22</h6>
+                        </center>
+                        <form class="col s12">
+                            <div class="row">
+                                <div class="input-field col s12">
+                                    <input id="query" type="text" class="validate">
+                                    <label for="query">Searching?</label>
+                                </div>
+                            </div>
+                        </form>
+                        <table id="ratinginfo" class="highlight responsive-table">
+                            <thead>
+                            <tr>
+                                <th>Title</th>
+                                <th>Artist</th>
+                                <th>Rating</th>
+                                <th>Genre</th>
+                                <th>Year</th>
+                            </tr>
+                            </thead>
+
+                            <tbody>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+            </div>
+            <div class="col s12 m2"></div>
+        </div>
+        <br><br>
+    </div>
+</div>
+{{end}}
+
+{{block header()}}
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.12.1/css/jquery.dataTables.css">
+{{end}}
+
+{{block footer()}}
+<script src="https://cdn.jsdelivr.net/npm/fuse.js/dist/fuse.js"></script>
+<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.js"></script>
+<script>
+    function covert_to_row(rate){
+        return [rate["spotify_album"],rate["spotify_art_name"],rate["rating"],rate["spotify_label"],"2022"]
+    }
+
+    let data = null
+    let table = null
+    let rows = [];
+    const options = {
+        // isCaseSensitive: false,
+        // includeScore: false,
+        // shouldSort: true,
+        // includeMatches: false,
+        // findAllMatches: false,
+        // minMatchCharLength: 1,
+        // location: 0,
+        // threshold: 0.6,
+        // distance: 100,
+        // useExtendedSearch: false,
+        // ignoreLocation: false,
+        // ignoreFieldNorm: false,
+        // fieldNormWeight: 1,
+        keys: [
+            "title",
+            "author.firstName"
+        ]
+    };
+    $(document).ready( function () {
+        table = $('#ratinginfo').DataTable({
+            searching: true,
+            columnDefs: [{
+                "defaultContent": "-",
+                "targets": "_all"
+            }]}
+        );
+        fetch("/data.client.json")
+            .then(response => {
+                return response.json();
+            }).then(json => {
+            data = json
+            data.forEach(function (item, index) {
+                table.row.add(covert_to_row(item));
+            });
+            table.draw(true);
+        })
+    });
+    // const fuse = new Fuse(list, options);
+
+</script>
+{{end}}
