@@ -4,7 +4,7 @@
     <!--Import Google Icon Font-->
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <!--Import materialize.css-->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+    <link rel="stylesheet" href="/static/materialize.css">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
     <!--Let browser know website is optimized for mobile-->
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
@@ -27,16 +27,16 @@
 
 <body>
 <header>
-    <nav class="light-blue lighten-1" role="navigation">
-        <div class="nav-wrapper container">
-            <a id="logo-container" href="/" class="brand-logo">Needle</a>
-            <ul class="right hide-on-med-and-down">
+    <nav class="fantano black-text" role="navigation">
+        <div class="nav-wrapper container black-text">
+            <a id="logo-container" href="/" class="brand-logo black-text">Needle</a>
+            <ul class="right hide-on-med-and-down ">
                 <li>
-                    <a href="/">Home</a>
+                    <a class="black-text" href="/">Home</a>
                 </li>
             </ul>
 
-            <ul id="nav-mobile" class="sidenav">
+            <ul id="nav-mobile" class="sidenav black-text">
                 <li style="margin-top: 2em"><a href="#">Home</a></li>
                 <li><div class="divider"></div></li>
                 <li><a href="https://github.com/draguve" title="Github">Github</a></li>
@@ -45,7 +45,7 @@
                 <li><a href="https://draguve.wtf" title="Website">Website</a></li>
             </ul>
             <a href="#" data-target="nav-mobile" class="sidenav-trigger">
-                <i class="material-icons">menu</i>
+                <i style="color:black" class="material-icons">menu</i>
             </a>
         </div>
     </nav>
@@ -53,14 +53,14 @@
 <main>
     {{yield body()}}
 </main>
-<footer class="page-footer light-blue" style="padding-top:0px;">
+<footer class="page-footer fantano black-text" style="padding-top:0px;">
     <div class="footer-copyright">
-        <div class="container">
+        <div class="container black-text">
             Made at the expense of @draguve's sanity
-            <div class="right">
-                <a href="https://github.com/draguve" title="Github"><i class="fa fa-github" style="color:white"></i></a>
-                <a href="https://www.instagram.com/draguve/" title="Instagram"><i class="fa fa-instagram" style="color:white"></i></a>
-                <a href="https://twitter.com/draguve" title="Twitter"><i class="fa fa-twitter" style="color:white"></i></a>
+            <div class="right black-text">
+                <a href="https://github.com/draguve" title="Github"><i class="fa fa-github" style="color:black"></i></a>
+                <a href="https://www.instagram.com/draguve/" title="Instagram"><i class="fa fa-instagram" style="color:black"></i></a>
+                <a href="https://twitter.com/draguve" title="Twitter"><i class="fa fa-twitter" style="color:black"></i></a>
             </div>
 
         </div>

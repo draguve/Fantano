@@ -55,7 +55,7 @@ func main() {
 	r.GET("/", index)
 	r.GET("/404", error404)
 	r.GET("/album/:id", album)
-	r.StaticFS("/static", http.Dir("./ScoreImages"))
+	r.StaticFS("/static", http.Dir("./Static"))
 	r.StaticFile("/data.client.json", "./DatabaseBuild/output.client.json")
 
 	r.NoRoute(error404)
@@ -90,7 +90,7 @@ type track struct {
 	id       string
 	explict  bool
 	fav      bool
-	not_fav  bool
+	notFav   bool
 }
 
 func album(c *gin.Context) {
@@ -105,14 +105,21 @@ func album(c *gin.Context) {
 				albumName, _ = jsonparser.GetString(data, "title")
 			}
 		}
+		artistId := ""
 		artistName, err := jsonparser.GetString(data, "spotify_artists", "[0]", "name")
 		if err != nil {
 			artistName, err = jsonparser.GetString(data, "artist")
 			if err != nil {
 				artistName = "Could not find artist name"
 			}
+		} else {
+			artistId, err = jsonparser.GetString(data, "spotify_artists", "[0]", "id")
 		}
 		image, _ := jsonparser.GetString(data, "spotify_obj", "images", "[0]", "url")
+		label, err := jsonparser.GetString(data, "spotify_obj", "label")
+		if err != nil {
+			label, err = jsonparser.GetString(data, "fantano_genre")
+		}
 		spotifyId, _ := jsonparser.GetString(data, "spotify_obj", "id")
 		ratingString, _ := jsonparser.GetString(data, "rating")
 		var ratings = strings.Split(strings.Split(ratingString, ",")[0], "/")[0]
@@ -156,6 +163,8 @@ func album(c *gin.Context) {
 		vars.Set("ratingString", ratingString)
 		vars.Set("ratingUrl", ratingUrl)
 		vars.Set("tracks", tracks)
+		vars.Set("artistId", artistId)
+		vars.Set("label", label)
 	} else {
 		c.Redirect(301, "/404")
 	}

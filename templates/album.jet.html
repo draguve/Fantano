@@ -11,18 +11,25 @@
                                 <div class="card">
                                     {{if image!="" }}
                                         <div class="card-image">
+                                            {{if ratingUrl!="" }}
+
+                                            {{end}}
                                             <label id="albumArt" class="label" data-toggle="tooltip" title="Album">
                                                 <img class="rounded" id="avatar" src="{{ image }}" alt="avatar" style="max-width: 100%">
                                                 {{if ratingUrl!="" }}
-                                                <span style="background-size: 50% 50%"></span>
+                                                <span style="background-size: 50% 50%"></span><sup>1</sup>
                                                 {{end}}
                                             </label>
                                         </div>
+
                                     {{end}}
                                     <div class="card-content">
-                                        <span class="card-title">{{ albumName }}</span>
-                                        <p>{{ artistName }}</p>
-                                        <p>{{ ratingString }}</p>
+                                        <span class="card-title">Album : {{ albumName }}</span>
+                                        <p>Artist : {{if artistId!=""}}<a href="https://open.spotify.com/artist/{{artistId}}">{{end}}{{ artistName }}{{if artistId!=""}}</a>{{end}}</p>
+                                        <p>Fantano's Rating : {{ ratingString }}</p>
+                                        {{if label!=""}}
+                                        <p>Label : {{ label }}</p>
+                                        {{end}}
                                     </div>
                                     {{if spotifyId!="" }}
                                         <div class="card-action">
@@ -42,9 +49,9 @@
                     </div>
                 </div>
                 {{ if tracks!=nil && len(tracks)>0 }}
-                <div class="col s12 m8" style="margin-top: 2em;margin-left: 2em;">
-                    <div class="card blue darken-2">
-                        <div class="card-content white-text">
+                <div class="col s12 m8 songs" style="margin-top: 2em;margin-left: 2em;">
+                    <div class="card blue fantano">
+                        <div class="card-content black-text">
                             <span class="card-title">Songs</span>
                             <table class="highlight">
                                 <thead>
@@ -55,7 +62,7 @@
                                 </tr>
                                 </thead>
                                     {{ range i := tracks }}
-                                    <tr class="clickable" data-href="https://open.spotify.com/track/{{ i.id }}">
+                                    <tr class="clickable {{ if i.fav }}fantano up2{{ end }} {{ if i.notFav }}fantano up1 white-text{{ end }}" data-href="https://open.spotify.com/track/{{ i.id }}">
                                         <td>{{ i.name }}</td>
                                         <td>{{ i.duration }}</td>
                                         <td>{{ if i.explict }}<i class="material-icons">explicit</i> {{ end }}</td>
@@ -66,11 +73,15 @@
                             </table>
                         </div>
                     </div>
+
                 </div>
                 {{ end }}
             </div>
             <br><br>
         </div>
+        <p><sup>1</sup>  The text("light","decent","strong") is just there for the memes and is random according to the score, to see the actual score watch the video</p>
+        <p><sup>2</sup>  Green colors in the tracklisting are fav songs and brown least fav</p>
+        <p><sup>3</sup>  This website is in no way affiliated to <a href="https://www.youtube.com/c/theneedledrop">@theneedledrop</a></p>
     </div>
 </main>
 {{end}}
@@ -101,6 +112,10 @@
         z-index: 1;
         background-size: 50% 50%;
         background: url({{ ratingUrl }}) no-repeat center center;
+    }
+    #albumArt sup {
+        position: absolute;
+        left: 100%;
     }
     {{end}}
 </style>

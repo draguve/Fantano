@@ -7,7 +7,7 @@
                 <div class="row">
                     <div class="col s12" method='post'>
                         <center style="padding-bottom: 2em;">
-                            <h5 class="indigo-text">Ratings</h5>
+                            <h5 class="fantano-text text-up1">Ratings</h5>
                             <h6>Last updated on 29/7/22</h6>
                         </center>
                         <div class="col s12">
@@ -50,11 +50,19 @@
     .dataTables_filter {
         display: none;
     }
+    /* label focus color */
+    .input-field input:focus + label {
+        color: #02C39A !important;
+    }
+    /* label underline focus color */
+    .row .input-field input:focus {
+        border-bottom: 1px solid #02C39A !important;
+        box-shadow: 0 1px 0 0 #02C39A !important
+    }
 </style>
 {{end}}
 
 {{block footer()}}
-<script src="https://cdn.jsdelivr.net/npm/fuse.js/dist/fuse.js"></script>
 <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.js"></script>
 <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/responsive/2.3.0/js/dataTables.responsive.min.js"></script>
 <script>
@@ -110,6 +118,8 @@
             table.search( $(this).val() ).draw();
             console.log( $(this).val());
         })
+        const searchInput = document.getElementById('query');
+        searchInput.value = '';
         $('#ratinginfo tbody').on('click', 'tr', function () {
             var data = table.row(this).data();
             window.location.href = `/album/${ data[0] }`;
