@@ -22,6 +22,7 @@
                                     <div class="card-content">
                                         <span class="card-title">{{ albumName }}</span>
                                         <p>{{ artistName }}</p>
+                                        <p>{{ ratingString }}</p>
                                     </div>
                                     {{if spotifyId!="" }}
                                         <div class="card-action">
@@ -40,6 +41,7 @@
                         </div>
                     </div>
                 </div>
+                {{ if tracks!=nil && len(tracks)>0 }}
                 <div class="col s12 m8" style="margin-top: 2em;margin-left: 2em;">
                     <div class="card blue darken-2">
                         <div class="card-content white-text">
@@ -48,16 +50,24 @@
                                 <thead>
                                 <tr>
                                     <th>Name</th>
-                                    <th>Artist</th>
+                                    <th>Duration</th>
+                                    <th>Explict?</th>
                                 </tr>
                                 </thead>
-
+                                    {{ range i := tracks }}
+                                    <tr class="clickable" data-href="https://open.spotify.com/track/{{ i.id }}">
+                                        <td>{{ i.name }}</td>
+                                        <td>{{ i.duration }}</td>
+                                        <td>{{ if i.explict }}<i class="material-icons">explicit</i> {{ end }}</td>
+                                    </tr>
+                                    {{ end }}
                                 <tbody>
                                 </tbody>
                             </table>
                         </div>
                     </div>
                 </div>
+                {{ end }}
             </div>
             <br><br>
         </div>
@@ -98,6 +108,15 @@
 
 {{block footer()}}
 <script>
-
+    var elements = document.getElementsByClassName('clickable');
+    for (var i = 0; i < elements.length; i++) {
+        var element = elements[i];
+        element.addEventListener('click', function() {
+            var href = this.dataset.href;
+            if (href) {
+                window.location.assign(href);
+            }
+        });
+    }
 </script>
 {{end}}
