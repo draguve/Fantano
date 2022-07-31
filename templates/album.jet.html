@@ -1,0 +1,86 @@
+{{extends "./default.jet.html"}}
+{{block body()}}
+<main>
+    <div class="container">
+        <div class="section">
+            <div class="row" style="margin-top: 2em;">
+                <div class="col s12 m4">
+                    <div class="row">
+                        <div class="col s12">
+                            <div class="row">
+                                <div class="card">
+                                    <div class="card-image">
+                                        <label class="label" data-toggle="tooltip" title="Change image">
+                                            <img class="rounded" id="avatar" src='{{ len(playlist.Images) > 0 ? playlist.Images[0].URL : "TEST" }}' alt="avatar" style="max-width: 100%">
+                                            <input type="file" class="sr-only" id="input" name="image" accept="image/*">
+                                        </label>
+                                    </div>
+                                    <div class="card-content">
+                                        <span class="card-title">{{ playlist.Name }}</span>
+                                        <p>{{ playlist.Description }}</p>
+                                    </div>
+                                    <div class="card-action">
+                                        <a href="https://open.spotify.com/playlist/{{ playlist.ID }}">Open on Spotify</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col s12 m8">
+                    <div class="card blue darken-2">
+                        <div class="card-content white-text">
+                            <span class="card-title">Songs</span>
+                            <table class="highlight">
+                                <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Artist</th>
+                                </tr>
+                                </thead>
+
+                                <tbody>
+                                {{ range playlist.Tracks.Tracks }}
+                                <tr>
+                                    <td>{{ .Track.Name }}</td>
+                                    <td>{{ .Track.Artists[0].Name }}</td>
+                                </tr>
+                                {{ end }}
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="card-action">
+                            <a href="https://open.spotify.com/playlist/{{ playlist.ID }}">More information at Spotify</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <br><br>
+        </div>
+    </div>
+
+    <div id="cropmodal" class="modal">
+        <div class="modal-content">
+            <h4>Modal Change Image</h4>
+            <div class="img-container">
+                <img class="responsive-img" id="image" src="https://avatars0.githubusercontent.com/u/3456749" style="max-height:30em ;display: block">
+            </div>
+        </div>
+        <div class="modal-footer">
+            <a href="#!" class="modal-close waves-effect waves-green btn-flat">Cancel</a>
+            <button type="button" class="btn waves-effect waves-light" id="crop">Crop</button>
+        </div>
+    </div>
+</main>
+{{end}}
+
+{{block header()}}
+<style>
+</style>
+{{end}}
+
+{{block footer()}}
+<script>
+
+</script>
+{{end}}

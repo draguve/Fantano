@@ -40,7 +40,10 @@ for key, value in all_data.items():
     data["spotify_album"] = data["spotify_obj"]["name"]
     data["spotify_label"] = data["spotify_obj"]["label"]
     data["spotify_art_name"] = data["spotify_obj"]["artists"][0]["name"]
-    data["spotify_year"] = 0 #do this
+    data["spotify_year"] = data["spotify_obj"]["release_date"]
+    if "fantano_genre" in data:
+        data["fantano_label"] = data["fantano_genre"]
+        del data["fantano_genre"]
     del data["spotify_obj"]
     del data["least_fav_tracks"]
     del data["fav_tracks"]
@@ -55,8 +58,12 @@ for not_found in final_not_found.all():
     del data["fav_tracks"]
     all_data_client.append(data)
 
+server_data = {}
+for item in all_data_server:
+    server_data[item["videoId"]] = item
+
 with open('output.client.json', 'w') as fp:
     json.dump(all_data_client, fp)
 
 with open('output.server.json', 'w') as fp:
-    json.dump(all_data_server, fp)
+    json.dump(server_data, fp)
