@@ -4,15 +4,18 @@
     <div class="container">
         <div class="section">
             <div class="row" style="margin-top: 2em;">
-                <div class="col s12 m4">
+                <div class="col s12 m3" style="margin-top: 2em;margin-left: 2em;">
                     <div class="row">
                         <div class="col s12">
                             <div class="row">
                                 <div class="card">
-                                    {{if image!=nil}}
+                                    {{if image!="" }}
                                         <div class="card-image">
-                                            <label class="label" data-toggle="tooltip" title="Album">
+                                            <label id="albumArt" class="label" data-toggle="tooltip" title="Album">
                                                 <img class="rounded" id="avatar" src="{{ image }}" alt="avatar" style="max-width: 100%">
+                                                {{if ratingUrl!="" }}
+                                                <span style="background-size: 50% 50%"></span>
+                                                {{end}}
                                             </label>
                                         </div>
                                     {{end}}
@@ -20,15 +23,24 @@
                                         <span class="card-title">{{ albumName }}</span>
                                         <p>{{ artistName }}</p>
                                     </div>
-                                    <div class="card-action">
-                                        <a href="https://open.spotify.com/playlist/">Open on Spotify</a>
-                                    </div>
+                                    {{if spotifyId!="" }}
+                                        <div class="card-action">
+                                            <a href="https://open.spotify.com/album/{{ spotifyId }}">Open on Spotify</a>
+                                        </div>
+                                    {{end}}
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="col s12 m8">
+                <div class="col s12 m8" style="margin-top: 2em;margin-left: 2em;">
+                    <div class="row">
+                        <div class="card video">
+                            <iframe src="https://www.youtube.com/embed/{{ videoId }}" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                        </div>
+                    </div>
+                </div>
+                <div class="col s12 m8" style="margin-top: 2em;margin-left: 2em;">
                     <div class="card blue darken-2">
                         <div class="card-content white-text">
                             <span class="card-title">Songs</span>
@@ -44,26 +56,10 @@
                                 </tbody>
                             </table>
                         </div>
-                        <div class="card-action">
-                            <a href="https://open.spotify.com/playlist/">More information at Spotify</a>
-                        </div>
                     </div>
                 </div>
             </div>
             <br><br>
-        </div>
-    </div>
-
-    <div id="cropmodal" class="modal">
-        <div class="modal-content">
-            <h4>Modal Change Image</h4>
-            <div class="img-container">
-                <img class="responsive-img" id="image" src="https://avatars0.githubusercontent.com/u/3456749" style="max-height:30em ;display: block">
-            </div>
-        </div>
-        <div class="modal-footer">
-            <a href="#!" class="modal-close waves-effect waves-green btn-flat">Cancel</a>
-            <button type="button" class="btn waves-effect waves-light" id="crop">Crop</button>
         </div>
     </div>
 </main>
@@ -71,6 +67,32 @@
 
 {{block header()}}
 <style>
+    .video {
+        width: 100%;
+        position: relative;
+        padding-bottom: 56.25%; /* ratio 16/9 */
+    }
+
+    .video iframe {
+        border: none;
+        position: absolute;
+        width: 100%;
+        height: 100%;
+    }
+
+    {{ if ratingUrl!="" }}
+    #albumArt span {
+        display: block;
+        position: absolute;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        right: 0;
+        z-index: 1;
+        background-size: 50% 50%;
+        background: url({{ ratingUrl }}) no-repeat center center;
+    }
+    {{end}}
 </style>
 {{end}}
 

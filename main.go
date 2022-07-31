@@ -7,13 +7,19 @@ import (
 	"github.com/gin-gonic/gin"
 	"io/ioutil"
 	"log"
+	"net/http"
+	"math/rand"
+	"time"
 	"os"
+	"strconv"
+	"strings"
 )
 
 var (
 	views = jet.NewHTMLSet("./templates")
 	jsonData []byte
 	videos map[string][]byte
+	prefix []string
 )
 
 func main(){
@@ -38,11 +44,19 @@ func main(){
 		return
 	}
 
+	rand.Seed(time.Now().Unix())
+	prefix = make([]string, 0)
+	prefix = append(prefix,
+		"decent",
+		"light",
+		"strong")
+
 	r := gin.Default()
 
 	r.GET("/",index)
 	r.GET("/404",error404)
 	r.GET("/album/:id",album)
+	r.StaticFS("/static", http.Dir("./ScoreImages"))
 	r.StaticFile("/data.client.json", "./DatabaseBuild/output.client.json")
 
 	r.NoRoute(error404)
@@ -92,10 +106,27 @@ func album(c *gin.Context){
 			}
 		}
 		image, _ := jsonparser.GetString(data, "spotify_obj","images","[0]","url")
+		spotifyId, _ := jsonparser.GetString(data, "spotify_obj","id")
+		ratingString, _ := jsonparser.GetString(data, "rating")
+		var ratings = strings.Split(strings.Split(ratingString, ",")[0],"/")[0]
+		var ratingNumber = -1
+		var ratingUrl = ""
+		if val, err := strconv.Atoi(ratings); err == nil {
+			ratingNumber = val
+		}
+		if ratingNumber == 10{
+			ratingUrl = "/static/10.png"
+		}else if ratingNumber<10 && ratingNumber>-1{
+			ratingUrl = fmt.Sprintf("/static/%s%d.png",prefix[rand.Intn(len(prefix))],ratingNumber)
+		}
+		vars.Set("videoId",id)
 		vars.Set("albumName",albumName)
 		vars.Set("artistName",artistName)
 		vars.Set("image",image)
 		vars.Set("data",data)
+		vars.Set("spotifyId",spotifyId)
+		vars.Set("ratingString",ratingString)
+		vars.Set("ratingUrl",ratingUrl)
 	}else{
 		c.Redirect(301,"/404")
 	}
