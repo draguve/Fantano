@@ -1,9 +1,9 @@
 package main
 
 import (
-	"encoding/json"
 	"fmt"
 	"github.com/CloudyKit/jet"
+	"github.com/buger/jsonparser"
 	"github.com/gin-gonic/gin"
 	"io/ioutil"
 	"log"
@@ -12,24 +12,30 @@ import (
 
 var (
 	views = jet.NewHTMLSet("./templates")
-	info map[string]interface{}
+	jsonData []byte
+	videos map[string][]byte
 )
 
 func main(){
+	videos = make(map[string][]byte, 5000)
 	jsonFile, err := os.Open("./DatabaseBuild/output.server.json")
 	// if we os.Open returns an error then handle it
 	if err != nil {
 		fmt.Println(err)
 		os.Exit(1)
 	}
-	jsonData, err := ioutil.ReadAll(jsonFile)
+	jsonData, err = ioutil.ReadAll(jsonFile)
 	if err != nil {
 		fmt.Println(err)
 		os.Exit(1)
 	}
-	if err := json.Unmarshal(jsonData, &info); err != nil {
-		fmt.Println(err)
-		os.Exit(1)
+	err = jsonparser.ObjectEach(jsonData, func(key []byte, value []byte, dataType jsonparser.ValueType, offset int) error {
+		videos[string(key)] = value
+		//fmt.Printf("Key: '%s'\n Type: %s\n", string(key), dataType)
+		return nil
+	})
+	if err != nil {
+		return
 	}
 
 	r := gin.Default()
@@ -68,12 +74,31 @@ func index(c *gin.Context){
 func album(c *gin.Context){
 	t, _ := views.GetTemplate("album.jet.html")
 	id := c.Param("id")
-	if val, ok := info[id]; ok {
-		println(val)
-	}else{
-		c.Redirect(404,"/404")
-	}
 	vars := make(jet.VarMap)
+	if data, ok := videos[id]; ok {
+
+		albumName, err := jsonparser.GetString(data, "spotify_name")
+		if err!=nil {
+			albumName,err = jsonparser.GetString(data,"album")
+			if err!=nil{
+				albumName, _ = jsonparser.GetString(data,"title")
+			}
+		}
+		artistName, err := jsonparser.GetString(data, "spotify_artists","[0]","name")
+		if err!=nil {
+			artistName,err = jsonparser.GetString(data,"artist")
+			if err!=nil{
+				artistName = "Could not find artist name"
+			}
+		}
+		image, _ := jsonparser.GetString(data, "spotify_obj","images","[0]","url")
+		vars.Set("albumName",albumName)
+		vars.Set("artistName",artistName)
+		vars.Set("image",image)
+		vars.Set("data",data)
+	}else{
+		c.Redirect(301,"/404")
+	}
 	c.Writer.WriteHeader(200)
 	if err := t.Execute(c.Writer, vars, nil); err != nil {
 		log.Println(err)

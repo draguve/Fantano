@@ -9,18 +9,19 @@
                         <div class="col s12">
                             <div class="row">
                                 <div class="card">
-                                    <div class="card-image">
-                                        <label class="label" data-toggle="tooltip" title="Change image">
-                                            <img class="rounded" id="avatar" src='{{ len(playlist.Images) > 0 ? playlist.Images[0].URL : "TEST" }}' alt="avatar" style="max-width: 100%">
-                                            <input type="file" class="sr-only" id="input" name="image" accept="image/*">
-                                        </label>
-                                    </div>
+                                    {{if image!=nil}}
+                                        <div class="card-image">
+                                            <label class="label" data-toggle="tooltip" title="Album">
+                                                <img class="rounded" id="avatar" src="{{ image }}" alt="avatar" style="max-width: 100%">
+                                            </label>
+                                        </div>
+                                    {{end}}
                                     <div class="card-content">
-                                        <span class="card-title">{{ playlist.Name }}</span>
-                                        <p>{{ playlist.Description }}</p>
+                                        <span class="card-title">{{ albumName }}</span>
+                                        <p>{{ artistName }}</p>
                                     </div>
                                     <div class="card-action">
-                                        <a href="https://open.spotify.com/playlist/{{ playlist.ID }}">Open on Spotify</a>
+                                        <a href="https://open.spotify.com/playlist/">Open on Spotify</a>
                                     </div>
                                 </div>
                             </div>
@@ -40,17 +41,11 @@
                                 </thead>
 
                                 <tbody>
-                                {{ range playlist.Tracks.Tracks }}
-                                <tr>
-                                    <td>{{ .Track.Name }}</td>
-                                    <td>{{ .Track.Artists[0].Name }}</td>
-                                </tr>
-                                {{ end }}
                                 </tbody>
                             </table>
                         </div>
                         <div class="card-action">
-                            <a href="https://open.spotify.com/playlist/{{ playlist.ID }}">More information at Spotify</a>
+                            <a href="https://open.spotify.com/playlist/">More information at Spotify</a>
                         </div>
                     </div>
                 </div>
