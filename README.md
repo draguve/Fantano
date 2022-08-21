@@ -14,3 +14,5 @@ Create and put the client id and client secret in spotify_album.py and spotify_s
 > python spotify_search.py
 > 
 > python spotify_album.py
+> 
+> python fav_tracks.py
